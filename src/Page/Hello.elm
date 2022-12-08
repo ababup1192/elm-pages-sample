@@ -70,7 +70,12 @@ view :
     -> Shared.Model
     -> StaticPayload Data RouteParams
     -> View Msg
-view _ _ static =
+view _ sharedModel static =
     { title = "Placeholder - "
-    , body = [ Html.a [ href "/" ] [ Html.text <| "SSG: Hello " ++ static.data ] ]
+    , body =
+        [ Html.a [ href "/" ]
+            [ Html.text <| "SSG: Hello " ++ static.data
+            ]
+        , Html.p [] [ Html.text <| "SharedText: " ++ sharedModel.sharedText ]
+        ]
     }

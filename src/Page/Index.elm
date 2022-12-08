@@ -12,7 +12,7 @@ import Pages.Manifest exposing (DisplayMode(..))
 import Pages.PageUrl exposing (PageUrl)
 import Pages.Url
 import Path exposing (Path)
-import Shared
+import Shared exposing (SharedMsg(..))
 import View exposing (View)
 
 
@@ -34,7 +34,7 @@ page =
         { head = head
         , data = data
         }
-        |> Page.buildWithLocalState
+        |> Page.buildWithSharedState
             { init = init
             , update = update
             , view = view
@@ -58,20 +58,20 @@ update :
     -> StaticPayload Data RouteParams
     -> Msg
     -> Model
-    -> ( Model, Cmd Msg )
+    -> ( Model, Cmd Msg, Maybe Shared.Msg )
 update _ _ _ _ msg _ =
     case msg of
         GotWorld result ->
             case result of
                 Ok fullText ->
-                    ( { str = fullText }, Cmd.none )
+                    ( { str = fullText }, Cmd.none, Just <| Shared.SharedMsg <| UpdateSharedText fullText )
 
                 Err _ ->
-                    ( { str = "failed" }, Cmd.none )
+                    ( { str = "failed" }, Cmd.none, Nothing )
 
 
-subscriptions : Maybe PageUrl -> RouteParams -> Path -> Model -> Sub Msg
-subscriptions _ _ _ _ =
+subscriptions : Maybe PageUrl -> RouteParams -> Path -> Model -> Shared.Model -> Sub Msg
+subscriptions _ _ _ _ _ =
     Sub.none
 
 

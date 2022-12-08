@@ -36,11 +36,11 @@ type alias Data =
 
 
 type SharedMsg
-    = NoOp
+    = UpdateSharedText String
 
 
 type alias Model =
-    { showMobileMenu : Bool
+    { sharedText : String
     }
 
 
@@ -59,7 +59,7 @@ init :
             }
     -> ( Model, Cmd Msg )
 init navigationKey flags maybePagePath =
-    ( { showMobileMenu = False }
+    ( { sharedText = "No text" }
     , Cmd.none
     )
 
@@ -68,10 +68,12 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         OnPageChange _ ->
-            ( { model | showMobileMenu = False }, Cmd.none )
+            ( model, Cmd.none )
 
         SharedMsg globalMsg ->
-            ( model, Cmd.none )
+            case globalMsg of
+                UpdateSharedText sharedText ->
+                    ( { model | sharedText = sharedText } , Cmd.none )
 
 
 subscriptions : Path -> Model -> Sub Msg
